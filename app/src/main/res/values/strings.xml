@@ -1,0 +1,10 @@
+<resources>
+  <string name="app_name">RickMorty</string>
+  <string name="status">Status:</string>
+  <string name="specie">Specie:</string>
+  <string name="gender">Gender:</string>
+  <string name="type">Type:</string>
+  <string name="origin">Origin:</string>
+  <string name="last_known_location">Last known\nlocation:</string>
+  <string name="more_characters_on_this_location">Characters on this location:</string>
+</resources>
