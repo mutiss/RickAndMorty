@@ -1,5 +1,8 @@
 package com.mutissx.rickmorty.presentation.screens.characters_list.components
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -32,75 +35,90 @@ import com.mutissx.rickmorty.presentation.ui.theme.MortyTShirt
 import com.mutissx.rickmorty.presentation.util.ColorUtils
 import java.util.Locale
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun CharacterItem(navController: NavController, character: RickMortyCharacterDomain) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(BlueBackground)
-            .clickable {
-                navController.navigate(
-                    route = Screen.CharactersDetailScreen.setCharParams(
-                        characterId = character.id,
-                        locationId = character.locationId
-                    )
-                )
-            }
-    ) {
+fun CharacterItem(
+    navController: NavController, character: RickMortyCharacterDomain,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
+    with(sharedTransitionScope) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .background(BlueBackground)
+                .clickable {
+                    navController.navigate(
+                        route = Screen.CharactersDetailScreen.setCharParams(
+                            characterId = character.id,
+                            locationId = character.locationId
+                        )
+                    )
+                }
         ) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(character.imageUrl)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null,
+            Row(
                 modifier = Modifier
-                    .size(width = 150.dp, height = 150.dp)
-                    .clip(CircleShape)
-                    .border(2.dp, ColorUtils.getCharacterNameColor(character.name.lowercase(Locale.getDefault())), CircleShape)
-            )
-            Column(
-                Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Top
+                    .fillMaxWidth()
+                    .padding(16.dp)
             ) {
-                Text(
-                    text = character.name,
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(character.imageUrl)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    fontSize = 20.sp,
-                    color = ColorUtils.getCharacterNameColor(character.name.lowercase(Locale.getDefault())),
-                    fontWeight = FontWeight.Black
+                        .size(width = 150.dp, height = 150.dp)
+                        .sharedElement(
+                            state = rememberSharedContentState(key = "char-${character.id}"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
+                        .clip(CircleShape)
+                        .border(
+                            2.dp,
+                            ColorUtils.getCharacterNameColor(character.name.lowercase(Locale.getDefault())),
+                            CircleShape
+                        )
                 )
-                Text(
-                    text = character.status,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    fontSize = 16.sp,
-                    color = ColorUtils.getColorFromStatus(character.status),
-                    fontWeight = FontWeight.Normal
-                )
-                Text(
-                    text = character.species,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    fontSize = 16.sp,
-                    color = ColorUtils.getColorFromSpecie(character.species),
-                    fontWeight = FontWeight.Normal
-                )
+                Column(
+                    Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Top
+                ) {
+                    Text(
+                        text = character.name,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        fontSize = 20.sp,
+                        color = ColorUtils.getCharacterNameColor(character.name.lowercase(Locale.getDefault())),
+                        fontWeight = FontWeight.Black
+                    )
+                    Text(
+                        text = character.status,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        fontSize = 16.sp,
+                        color = ColorUtils.getColorFromStatus(character.status),
+                        fontWeight = FontWeight.Normal
+                    )
+                    Text(
+                        text = character.species,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        fontSize = 16.sp,
+                        color = ColorUtils.getColorFromSpecie(character.species),
+                        fontWeight = FontWeight.Normal
+                    )
+                }
             }
         }
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp), color = MortyTShirt
+        )
     }
-    Divider(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp), color = MortyTShirt
-    )
 }

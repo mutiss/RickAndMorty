@@ -1,5 +1,8 @@
 package com.mutissx.rickmorty.presentation.screens.characters_list
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,10 +21,13 @@ import com.mutissx.rickmorty.presentation.common.components.Loader
 import com.mutissx.rickmorty.presentation.screens.characters_list.components.CharacterItem
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CharactersListScreen(
     navController: NavController,
-    viewModel: CharactersListViewModel = koinViewModel()
+    viewModel: CharactersListViewModel = koinViewModel(),
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
 
@@ -50,7 +56,12 @@ fun CharactersListScreen(
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(charactersState) { character ->
                             if (character != null) {
-                                CharacterItem(navController = navController, character = character)
+                                CharacterItem(
+                                    navController = navController,
+                                    character = character,
+                                    sharedTransitionScope = sharedTransitionScope,
+                                    animatedVisibilityScope = animatedVisibilityScope
+                                )
                             }
                         }
                         item {

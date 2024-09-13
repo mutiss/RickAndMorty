@@ -1,5 +1,8 @@
 package com.mutissx.rickmorty.presentation.screens.character_detail
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,10 +26,14 @@ import com.mutissx.rickmorty.presentation.ui.theme.BlueBackground
 import com.mutissx.rickmorty.presentation.util.orZero
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CharacterDetailScreen(
     navController: NavController,
-    viewModel: CharacterDetailViewModel = koinViewModel()
+    viewModel: CharacterDetailViewModel = koinViewModel(),
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+
 ) {
     val characterDetailState by viewModel.characterDetailState.collectAsState()
 
@@ -34,6 +41,7 @@ fun CharacterDetailScreen(
         is CharacterDetailState.CharacterDetailLoadingState -> {
             Loader()
         }
+
         is CharacterDetailState.CharacterDetailSuccessState -> {
             val character =
                 (characterDetailState as CharacterDetailState.CharacterDetailSuccessState).characterDetail
@@ -44,7 +52,11 @@ fun CharacterDetailScreen(
                     .background(BlueBackground)
                     .verticalScroll(rememberScrollState())
             ) {
-                CharacterHeader(character)
+                CharacterHeader(
+                    character = character,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
                 CharacterContent(character)
                 SpacerVerticalWithValue(10)
                 ListCharactersInLocation(
