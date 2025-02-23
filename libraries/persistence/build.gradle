@@ -6,7 +6,7 @@ plugins {
 
 android {
   namespace 'com.mutissx.rickmorty.persistence'
-  compileSdk 33
+  compileSdk 34
 
   defaultConfig {
     minSdk 28
@@ -20,16 +20,16 @@ dependencies {
 
   implementation project(":core:base")
 
-  implementation 'androidx.core:core-ktx:1.10.0'
+  implementation 'androidx.core:core-ktx:1.13.1'
   implementation 'androidx.appcompat:appcompat:1.6.1'
-  implementation 'com.google.android.material:material:1.8.0'
+  implementation 'com.google.android.material:material:1.12.0'
 
   //Koin
   implementation "io.insert-koin:koin-androidx-compose:3.2.1"
 
   // Room
-  implementation "androidx.room:room-ktx:2.5.1"
-  kapt "androidx.room:room-compiler:2.5.1"
+  implementation "androidx.room:room-ktx:2.6.1"
+  kapt "androidx.room:room-compiler:2.6.1"
   implementation "androidx.room:room-paging:2.5.1"
   kaptAndroidTest "androidx.room:room-compiler:2.5.1"
 
